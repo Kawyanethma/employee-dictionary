@@ -1,75 +1,118 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
+import {
+  Button,
+  FlatList,
+  Keyboard,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { ThemedText } from "@/components/ThemedText";
+import * as schema from "@/db/schema";
+import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
+import {  useSQLiteContext } from "expo-sqlite";
+
+import { useState } from "react";
+
+import Feather from "@expo/vector-icons/Feather";
+import { useThemeColor } from "@/hooks/useThemeColor";
+import DBServices from "@/services/db.services";
+
+
 
 export default function HomeScreen() {
+  const db = useSQLiteContext();
+  const drizzleDb = drizzle(db, { schema });
+  useDrizzleStudio(db);
+
+
+  const backgroundColor = useThemeColor({}, "mainColor");
+  const textColor = useThemeColor({}, "text");
+
+  const [search, setSearch] = useState<string>("");
+
+  const { data } = useLiveQuery(
+    drizzleDb.query.employees.findMany({
+      where: (employees, { like }) => like(employees.name, `%${search}%`),
+      orderBy: (employees, { asc }) => asc(employees.name),
+      limit: 10,
+    }),
+    [search]
+  );
+
+  const addTestEmployee = () => {
+    DBServices.getInstance().addEmployee(drizzleDb, {
+      name: "Test Employee",
+      age: 30,
+      dateOfBirth: "1993-01-01",
+      emp_id: `emp_1232`,
+    });
+  };
+
+  const delteTestEmployee = () => {
+    DBServices.getInstance().deleteEmployee(drizzleDb, 1, "emp_1232");
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={styles.container}>
+        <View style={[styles.inputContainer, { backgroundColor }]}>
+          <TextInput
+            style={[styles.textInput, { backgroundColor, color: textColor }]}
+            placeholder="Search"
+            placeholderTextColor={textColor}
+            value={search}
+            onChangeText={setSearch}
+          />
+          <Feather name="search" size={25} color={textColor} />
+        </View>
+        <FlatList
+          data={data}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                paddingVertical: 10,
+                borderBottomWidth: 1,
+                borderBottomColor: "#ccc",
+              }}
+            >
+              <ThemedText style={{ fontSize: 18 }}>{item.name}</ThemedText>
+              <ThemedText>
+                Age: {item.age}, Date of Birth: {item.dateOfBirth}
+              </ThemedText>
+            </View>
+          )}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+       <Button title="Add Test Employee" onPress={addTestEmployee} />
+        <Button title="Delete Test Employee" onPress={delteTestEmployee} />
+   
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    marginHorizontal: 22,
+    marginTop: StatusBar.currentHeight ?? 0,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderRadius: 6,
+    paddingHorizontal: 16,
+    marginVertical: 15,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  textInput: {
+    height: 55,
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "500",
   },
 });
