@@ -53,7 +53,6 @@ export default function AddEmployeeLayout() {
   });
 
   const onSubmit = async (data: FormData) => {
-    console.log("Form Data:", data);
     try {
       await DBServices.getInstance().addEmployee(drizzleDb, {
         emp_id: data.emp_id,

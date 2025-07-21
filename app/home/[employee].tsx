@@ -36,7 +36,7 @@ export default function EmployeePreview() {
   const [age, setAge] = useState<number | null>(null);
   const { employee } = useLocalSearchParams();
   const [canSave, setCanSave] = useState(false);
-  const parsedEmployee =  JSON.parse(decodeURIComponent(employee as string));
+  const parsedEmployee = JSON.parse(decodeURIComponent(employee as string));
 
   const db = useSQLiteContext();
   const drizzleDb = drizzle(db, { schema });
@@ -62,8 +62,6 @@ export default function EmployeePreview() {
 
   useEffect(() => {
     const subscription = watch((value) => {
-      console.log("Form Value Changed:", value);
-
       if (
         value.dateOfBirth !== parsedEmployee.dateOfBirth ||
         value.age !== parsedEmployee.age ||
@@ -211,7 +209,11 @@ export default function EmployeePreview() {
                 }
               }}
             />
-            <CustomButton title={"Delete Employee"} onPress={deleteEmployee}  deleteButton/>
+            <CustomButton
+              title={"Delete Employee"}
+              onPress={deleteEmployee}
+              deleteButton
+            />
           </View>
           <CalenderDialog
             showDialog={showDialog}
