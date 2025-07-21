@@ -10,6 +10,8 @@ export const Colors = {
   light: {
     text: '#11181C',
     background: '#fff',
+    buttonColor: '#000',
+    buttonText: '#fff',
     tint: tintColorLight,
     icon: '#687076',
     mainColor: '#e5e1d2',
@@ -18,6 +20,8 @@ export const Colors = {
   },
   dark: {
     text: '#ECEDEE',
+    buttonColor: '#ccccccff',
+    buttonText: '#000',
     background: '#151718',
     tint: tintColorDark,
     icon: '#9BA1A6',
