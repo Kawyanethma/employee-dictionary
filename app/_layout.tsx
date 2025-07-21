@@ -26,10 +26,6 @@ export default function RootLayout() {
   const db = drizzle(expoDb);
   const { success, error } = useMigrations(db, migrations);
 
-  const [loaded] = useFonts({
-    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
-  });
-
   useEffect(() => {
     if (success) {
       try{
@@ -45,9 +41,6 @@ export default function RootLayout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [success, error]);
 
-  if (!loaded) {
-    return null;
-  }
   return (
     <Suspense fallback={<ActivityIndicator size="large" />}>
       <SQLiteProvider
