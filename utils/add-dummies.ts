@@ -4,6 +4,9 @@ import { ExpoSQLiteDatabase } from "drizzle-orm/expo-sqlite";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const addDummyData = async (db: ExpoSQLiteDatabase) => {
+  if (process.env.EXPO_PUBLIC_DUMMY_DATA !== "true") {
+    return;
+  }
   const initDB = await AsyncStorage.getItem("initDB");
   if (initDB) {
     return;
@@ -69,7 +72,7 @@ export const addDummyData = async (db: ExpoSQLiteDatabase) => {
       name: "Chris Yellow",
       age: 34,
       dateOfBirth: "1989-04-18",
-    }
+    },
   ];
 
   for (const employee of employeesData) {

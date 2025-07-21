@@ -26,6 +26,7 @@ export default class DBServices {
       console.log("Employee added successfully:", employee);
     } catch (error) {
       console.error("Error adding employee:", error);
+      throw error;
     }
   }
 
@@ -43,6 +44,7 @@ export default class DBServices {
       console.log("Employee deleted successfully with id:", id);
     } catch (error) {
       console.error("Error deleting employee:", error);
+      throw error;
     }
   }
 
@@ -62,6 +64,7 @@ export default class DBServices {
       console.log("Employee updated successfully with id:", id);
     } catch (error) {
       console.error("Error updating employee:", error);
+      throw error;
     }
   }
 
