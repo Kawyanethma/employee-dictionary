@@ -8,6 +8,7 @@ type IconTextInputProps = {
   placeholder?: string;
   setText: React.Dispatch<React.SetStateAction<string>>;
   keyboardType?: "default" | "numeric";
+  
   icon: React.ComponentProps<typeof Feather>["name"];
 };
 
@@ -26,6 +27,8 @@ export function IconTextInput({
         style={[styles.textInput, { backgroundColor, color: textColor }]}
         placeholder={placeholder}
         keyboardType={keyboardType}
+        secureTextEntry={icon === "arrow-right"}
+        maxLength={icon === "arrow-right" ? 4 : undefined}
         placeholderTextColor={textColor}
         value={text}
         onChangeText={setText}

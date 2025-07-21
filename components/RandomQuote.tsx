@@ -4,8 +4,8 @@ import React from "react";
 import { ActivityIndicator } from "react-native-paper";
 
 export function RandomQuote() {
-  const { data: randomQuote, isLoading } = useGetRandomQuoteQuery({});
-    
+  const { data: randomQuote = {}, isLoading } = useGetRandomQuoteQuery({});
+
   return isLoading ? (
     <View style={styles.quoteContainer}>
       <ActivityIndicator size="small" color="#202420ff" />

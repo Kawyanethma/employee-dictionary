@@ -1,12 +1,11 @@
+import { API_URL } from "@/constants/Query.api";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-
 
 export const randomQuoteApi = createApi({
   reducerPath: "randomQuoteApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://api.realinspire.live/v1/quotes/random",
+    baseUrl: API_URL,
     timeout: 10000,
-    
   }),
   tagTypes: ["Quotes"],
   endpoints: (builder) => ({
@@ -14,7 +13,6 @@ export const randomQuoteApi = createApi({
       query: () => "/",
       providesTags: ["Quotes"],
     }),
-
   }),
 });
 

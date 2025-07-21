@@ -14,7 +14,7 @@ import { IconTextInput } from "@/components/IconTextInput";
 import { CustomButton } from "@/components/CustomButton";
 import { RandomQuote } from "@/components/RandomQuote";
 import { useRouter } from "expo-router";
-
+import { Divider } from "react-native-paper";
 
 export default function HomeScreen() {
   const [search, setSearch] = useState<string>("");
@@ -28,8 +28,8 @@ export default function HomeScreen() {
     >
       <SafeAreaView style={styles.container}>
         <IconTextInput text={search} setText={setSearch} icon="search" />
+        <Divider style={{ marginHorizontal: 25, marginVertical: 5, backgroundColor: "black", borderWidth: 1 }} />
         <RandomQuote />
-
         <EmployeeList search={search} />
         <View
           style={[
@@ -56,20 +56,5 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     paddingHorizontal: 20,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderRadius: 6,
-    paddingHorizontal: 16,
-    marginVertical: 15,
-    marginHorizontal: 22,
-  },
-  textInput: {
-    height: 55,
-    flex: 1,
-    fontSize: 16,
-    fontWeight: "500",
   },
 });

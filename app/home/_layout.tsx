@@ -6,10 +6,10 @@ import { SQLiteProvider, openDatabaseSync } from "expo-sqlite";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "@/drizzle/migrations";
-import { addDummyData } from "@/scripts/add-dummydata";
+import { addDummyData } from "@/utils/add-dummies";
 
-import { SnackbarView } from "@/components/SnackBarView";
 import { useAuth } from "@/hooks/useAuth";
+import { useSnackBar } from "@/hooks/useSnackBar";
 
 export const DATABASE_NAME = "employees";
 
@@ -18,6 +18,7 @@ export default function HomeLayout() {
   const expoDb = openDatabaseSync(DATABASE_NAME);
   const db = drizzle(expoDb);
   const { success, error } = useMigrations(db, migrations);
+  const { showSnackBar } = useSnackBar();
 
   useEffect(() => {
     if (success) {
@@ -25,6 +26,7 @@ export default function HomeLayout() {
         addDummyData(db);
       } catch (error) {
         console.error("Error adding dummy data:", error);
+        showSnackBar("Error adding dummy data. Please try again later.");
       }
       console.log("Migration successful!");
     }
@@ -57,7 +59,6 @@ export default function HomeLayout() {
             />
           </Stack.Protected>
         </Stack>
-        <SnackbarView />
       </SQLiteProvider>
     </Suspense>
   );

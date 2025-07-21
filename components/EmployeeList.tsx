@@ -43,7 +43,7 @@ export function EmployeeList({ search, style }: EmployeeListProps) {
   const drizzleDb = drizzle(db, { schema });
   useDrizzleStudio(db);
 
-  const { data } = useLiveQuery(
+  const { data = [] } = useLiveQuery(
     drizzleDb.query.employees.findMany({
       where: (employees, { like }) => like(employees.name, `%${search}%`),
       orderBy: (employees, { desc }) => desc(employees.id),

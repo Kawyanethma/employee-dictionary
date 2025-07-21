@@ -20,6 +20,13 @@ export default function HomeScreen() {
   const [pin, setPin] = useState<string>("");
   const { login } = useAuth();
 
+  const handleLogin = () => {
+    if (pin.length === 4) {
+      Keyboard.dismiss();
+      login(pin);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback
       onPress={() => Keyboard.dismiss()}
@@ -29,16 +36,18 @@ export default function HomeScreen() {
         <IconTextInput
           text={pin}
           setText={setPin}
+          keyboardType="numeric"
           icon="arrow-right"
           placeholder="Enter your PIN"
         />
+
         <View
           style={[
             styles.buttonContainer,
             { marginBottom: Platform.OS === "android" ? insets.bottom : 0 },
           ]}
         >
-          <CustomButton onPress={() => login()} title="Login" />
+          <CustomButton onPress={handleLogin} title="Login" />
         </View>
       </SafeAreaView>
     </TouchableWithoutFeedback>

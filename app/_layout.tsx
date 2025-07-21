@@ -12,6 +12,7 @@ import { Provider } from "react-redux";
 import { useColorScheme } from "@/hooks/useColorScheme";
 
 import { store } from "@/redux/store";
+import { SnackbarView } from "@/components/SnackBarView";
 
 export const DATABASE_NAME = "employees";
 
@@ -33,6 +34,7 @@ export default function RootLayout() {
             />
             <Stack.Screen name="+not-found" />
           </Stack>
+          <SnackbarView />
         </Provider>
       </PaperProvider>
       <StatusBar style="auto" />
